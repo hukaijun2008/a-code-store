@@ -1,0 +1,209 @@
+Sub gatedata(time_beg As String, time_end As String) 
+
+Application.ScreenUpdating = False
+Application.DisplayAlerts = False
+
+
+ActiveWorkbook.Worksheets("原始数据").Cells.Clear
+ActiveWorkbook.Worksheets("产品型号").Cells.Clear
+
+
+Dim souf As String
+Dim desf As String
+souf = "XX\ADI数据坐标汇总数据.accdb"
+desf = "YY\ADI数据坐标汇总数据.accdb"
+
+
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.fileexists(desf) Then
+        fso.deletefile desf
+    End If
+    fso.copyfile souf, desf
+   
+
+
+
+
+
+With ActiveWorkbook.Worksheets("原始数据").ListObjects.Add(SourceType:=0, Source:=Array( _
+    "OLEDB;Provider=Microsoft.ACE.OLEDB.12.0;Password="""";User ID=Admin;Data Source=" & desf & ";Mode=Share Deny Write;Ext", _
+    "ended Properties="""";Jet OLEDB:System database="""";Jet OLEDB:Registry Path="""";Jet OLEDB:Database Password=arraypht123!;Jet OLEDB:E", _
+    "ngine Type=6;Jet OLEDB:Database Locking Mode=0;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLED", _
+    "B:New Database Password="""";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale o", _
+    "n Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False;Jet OLEDB:Support Complex Data=False;Jet OLED" _
+    , "B:Bypass UserInfo Validation=False"), Destination:=ActiveWorkbook.Worksheets("原始数据").Range("$A$1")).QueryTable
+    .CommandType = xlCmdSql
+    .CommandText = Array("SELECT * FROM 基板层别表 WHERE 生产时间 > #" & time_beg & "# AND 生产时间 < #" & time_end & "#")
+    .RowNumbers = False
+    .FillAdjacentFormulas = False
+    .PreserveFormatting = True
+    .RefreshOnFileOpen = False
+    .BackgroundQuery = True
+    .RefreshStyle = xlInsertDeleteCells
+    .SavePassword = False
+    .SaveData = True
+    .AdjustColumnWidth = True
+    .RefreshPeriod = 0
+    .PreserveColumnInfo = True
+    .SourceDataFile = desf
+    .Refresh BackgroundQuery:=False
+End With
+ActiveWorkbook.Worksheets("原始数据").Range("Q1").FormulaR1C1 = "测试日期"
+ActiveWorkbook.Worksheets("原始数据").Range("Q2").FormulaR1C1 = "=INT([@测试时间])"
+ActiveWorkbook.Worksheets("原始数据").Range("R1").FormulaR1C1 = "生产日期"
+ActiveWorkbook.Worksheets("原始数据").Range("R2").FormulaR1C1 = "=INT([@生产时间])"
+
+ActiveWorkbook.Worksheets("原始数据").Range("S1").FormulaR1C1 = "集成度"
+ActiveWorkbook.Worksheets("原始数据").Range("S2").FormulaR1C1 = "=IFERROR(VLOOKUP([@产品型号],集成度!C[-18]:C[-17],2,FALSE),88)"
+
+ActiveWorkbook.Worksheets("原始数据").Range("T1").FormulaR1C1 = "类别1百分比"
+ActiveWorkbook.Worksheets("原始数据").Range("T2").FormulaR1C1 = "=[@类别1]/[@集成度]"
+
+
+ActiveWorkbook.Worksheets("原始数据").Range("U1").FormulaR1C1 = "类别2百分比"
+ActiveWorkbook.Worksheets("原始数据").Range("U2").FormulaR1C1 = "=[@类别2]/[@集成度]"
+
+ActiveWorkbook.Worksheets("原始数据").Range("V1").FormulaR1C1 = "类别3百分比"
+ActiveWorkbook.Worksheets("原始数据").Range("V2").FormulaR1C1 = "=[@类别3]/[@集成度]"
+
+ActiveWorkbook.Worksheets("原始数据").Columns("Q:Q").NumberFormatLocal = "yyyy/m/d;@"
+ActiveWorkbook.Worksheets("原始数据").Columns("R:R").NumberFormatLocal = "yyyy/m/d;@"
+
+
+
+With ActiveWorkbook.Worksheets("产品型号").ListObjects.Add(SourceType:=0, Source:=Array( _
+    "OLEDB;Provider=Microsoft.ACE.OLEDB.12.0;Password="""";User ID=Admin;Data Source=" & desf & ";Mode=Share Deny Write;Ext", _
+    "ended Properties="""";Jet OLEDB:System database="""";Jet OLEDB:Registry Path="""";Jet OLEDB:Database Password=arraypht123!;Jet OLEDB:E", _
+    "ngine Type=6;Jet OLEDB:Database Locking Mode=0;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;Jet OLED", _
+    "B:New Database Password="""";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;Jet OLEDB:Don't Copy Locale o", _
+    "n Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False;Jet OLEDB:Support Complex Data=False;Jet OLED" _
+    , "B:Bypass UserInfo Validation=False"), Destination:=ActiveWorkbook.Worksheets("产品型号").Range("$A$1")).QueryTable
+    .CommandType = xlCmdSql
+    .CommandText = Array("SELECT DISTINCT 产品型号 FROM 基板层别表  WHERE 生产时间 > #" & time_beg & "# AND 生产时间 < #" & time_end & "#")
+    .RowNumbers = False
+    .FillAdjacentFormulas = False
+    .PreserveFormatting = True
+    .RefreshOnFileOpen = False
+    .BackgroundQuery = True
+    .RefreshStyle = xlInsertDeleteCells
+    .SavePassword = False
+    .SaveData = True
+    .AdjustColumnWidth = True
+    .RefreshPeriod = 0
+    .PreserveColumnInfo = True
+    .SourceDataFile = desf
+    .Refresh BackgroundQuery:=False
+End With
+
+ActiveWorkbook.RefreshAll
+
+Application.ScreenUpdating = True
+Application.DisplayAlerts = True
+
+End Sub
+
+
+Sub makereport(filename As String)
+
+Application.ScreenUpdating = False
+Application.DisplayAlerts = False
+
+Workbooks.Add
+ActiveWorkbook.SaveAs filename:="ZZ\" & filename & ".xlsx", FileFormat:=xlOpenXMLWorkbook
+
+
+
+Dim ws1 As Worksheet
+
+
+For Each ws1 In Workbooks("生成AOI产品报表.xlsm").Worksheets
+    ws1.Visible = -1
+Next
+
+
+
+Dim PtRange As Range
+Dim i As Long
+Dim proname As String
+i = 2
+Do While Workbooks("生成AOI产品报表.xlsm").Worksheets("产品型号").Cells(i, 1).Value <> ""
+    If Left(Workbooks("生成AOI产品报表.xlsm").Worksheets("产品型号").Cells(i, 1).Value, 1) = "T" Then
+         
+        proname = Left(Workbooks("生成AOI产品报表.xlsm").Worksheets("产品型号").Cells(i, 1).Value, 6)
+        
+        For Each sh In Workbooks(filename & ".xlsx").Worksheets
+            If proname = sh.Name Then
+                GoTo NEXTLOOP
+            End If
+         
+        Next
+         
+        Workbooks("生成AOI产品报表.xlsm").Worksheets("模板Y").Copy After:=Workbooks(filename & ".xlsx").Sheets(1)
+        
+        Workbooks(filename & ".xlsx").Worksheets("模板Y").Name = proname & "Y"
+       
+       
+        Workbooks("生成AOI产品报表.xlsm").Worksheets("模板").Copy After:=Workbooks(filename & ".xlsx").Sheets(1)
+        Workbooks(filename & ".xlsx").Worksheets("模板").Name = proname
+        
+        Workbooks(filename & ".xlsx").Worksheets(proname & "Y").Select
+        ActiveSheet.Shapes.Range(Array("PHT透视表", "PVD透视表", "CVD透视表", "WET透视表", _
+        "DET透视表")).Select
+        Selection.Copy
+        Workbooks(filename & ".xlsx").Worksheets(proname).Select
+        Workbooks(filename & ".xlsx").Worksheets(proname).Activate
+        Cells(1, 1).Select
+        Cells(1, 1).Activate
+ERRBACK:
+        On Error Resume Next
+        
+        ActiveSheet.Paste'not steady,when error happened,try again by error treatment
+        
+        On Error GoTo 0
+            
+        Dim m As Long
+        m = 0
+        For Each cht In ActiveWorkbook.Worksheets(proname).ChartObjects
+            
+            With ActiveWorkbook.Worksheets(proname & "Y").PivotTables(cht.Name)
+                .PivotFields("产品型号").ClearAllFilters
+                For Each items In .PivotFields("产品型号").PivotItems
+                    If Left(items.Caption, 6) = proname Then
+                        items.Visible = True
+                    Else
+                        items.Visible = False
+                    End If
+                Next
+                
+                .PivotFields("产品型号").Orientation = xlPageField
+                .PivotFields("产品型号").Position = 1
+            End With
+            m = m + 1
+        Next
+   
+        If m = 0 Then'try again when paste failed
+            GoTo ERRBACK
+        End If
+        
+      ActiveWorkbook.Worksheets(proname & "Y").Visible = 2
+    End If
+    
+NEXTLOOP:
+    i = i + 1
+Loop
+
+Workbooks("生成AOI产品报表.xlsm").Worksheets("产品型号").Visible = 2
+Workbooks("生成AOI产品报表.xlsm").Worksheets("原始数据").Visible = 2
+Workbooks("生成AOI产品报表.xlsm").Worksheets("模板Y").Visible = 2
+Workbooks("生成AOI产品报表.xlsm").Worksheets("模板").Visible = 2
+
+Workbooks(filename & ".xlsx").Worksheets("Sheet1").Delete
+Workbooks(filename & ".xlsx").Worksheets("Sheet2").Delete
+Workbooks(filename & ".xlsx").Worksheets("Sheet3").Delete
+
+
+
+Application.ScreenUpdating = True
+Application.DisplayAlerts = True
+
+End Sub

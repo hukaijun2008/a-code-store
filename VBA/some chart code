@@ -1,0 +1,38 @@
+ActiveWorkbook.Worksheets("Sheet2").PivotTables("数据透视表1").PivotCache. _
+        CreatePivotTable TableDestination:="Sheet3!R1C1", TableName:="数据透视表2", _
+        DefaultVersion:=6
+    Sheets("Sheet3").Select
+    Cells(1, 1).Select
+    ActiveSheet.Shapes.AddChart2(201, xlColumnClustered).Select
+    ActiveChart.SetSourceData Source:=Range("Sheet3!$A$1:$C$18")
+    With ActiveChart.PivotLayout.PivotTable.PivotFields("累计")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ActiveChart.PivotLayout.PivotTable.PivotFields("指标")
+        .Orientation = xlRowField
+        .Position = 2
+    End With
+    ActiveChart.PivotLayout.PivotTable.AddDataField ActiveChart.PivotLayout. _
+        PivotTable.PivotFields("累计"), "计数项:累计", xlCount
+    With ActiveChart.PivotLayout.PivotTable.PivotFields("计数项:累计")
+        .Caption = "平均值项:累计"
+        .Function = xlAverage
+    End With
+    
+    
+For Each cht In ActiveWorkbook.Worksheets("Sheet3").ChartObjects
+
+cht.Chart.PivotLayout.PivotTable.AddDataField cht.Chart.PivotLayout. _
+        PivotTable.PivotFields("本月"), "本月平均", xlAverage
+
+Next
+
+ActiveSheet.PivotTables("数据透视表2").PivotFields("本月").Orientation = xlHidden
+
+With ActiveChart.PivotLayout.PivotTable.PivotFields("本月")
+      .Orientation = xlPageField
+      .Position = 1
+  End With
+  ActiveChart.PivotLayout.PivotTable.PivotFields("本月").ClearAllFilters
+  ActiveSheet.PivotTables(-1).PivotFields("本月").CurrentPage = "6.1"
