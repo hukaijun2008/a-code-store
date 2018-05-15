@@ -50,11 +50,10 @@ class calmode(object):
    
     def thetaadj(self):
         con_aft = copy.deepcopy(self)
-       
-       
         
         thetay = 0
         num = 0
+
         for i in range(len(con_aft.x_L)):
             a = con_aft.x_L[i]- con_aft.center[0]
             if a != 0 :
@@ -77,7 +76,32 @@ class calmode(object):
         else:
             print('Thetax:0.0')
                                
- 
+    def thetaadj_new(self):
+        con_aft = copy.deepcopy(self)
+        
+        thetay = 0
+        num = 0
+
+        for i in range(len(con_aft.x_L)):
+            a = con_aft.x_L[i]- con_aft.center[0]
+            thetay += con_aft.dy_L[i] * a
+            num += a**2
+        if num != 0:
+            print('Thetay:'+str(thetay/num*1000))
+        else:
+            print('Thetay:0.0')
+
+           
+        thetax = 0
+        num = 0
+        for i in range(len(con_aft.x_L)):
+            a = con_aft.y_L[i]- con_aft.center[1]
+            thetax += con_aft.dx_L[i] * a
+            num += a**2
+        if num != 0:
+            print('Thetax:'+str(thetax/num*1000))
+        else:
+            print('Thetax:0.0')
    
     def scaleadj(self):
         con_aft = copy.deepcopy(self)
@@ -105,10 +129,33 @@ class calmode(object):
         else:
             print('SY:0.0')
  
- 
+    def scaleadj_new(self):
+        con_aft = copy.deepcopy(self)
+        scalx = 0
+        num = 0
+        for i in range(len(con_aft.x_L)):
+            a = con_aft.x_L[i]- con_aft.center[0]
+            
+            scalx += con_aft.dx_L[i] * a
+            num += a**2
+        if num != 0:
+            print('SX:'+str(scalx/num*1000))
+        else:
+            print('SX:0.0')
+       
+        scaly = 0
+        num = 0
+        for i in range(len(con_aft.y_L)):
+            a = con_aft.y_L[i]- con_aft.center[1]
+            scaly += con_aft.dy_L[i] * (a)
+            num += a**2
+        if num != 0:
+            print('SY:'+str(scaly/num*1000))
+        else:
+            print('SY:0.0')
  
 if __name__ == '__main__':
-    flag = 17
+    flag = 81
     if flag == 1: # OX 0 OY -0.75 T 13.514 SX 0 SY 13.514 Orth 13.514
         x = [-211,-211,-100,-100]
         y = [211,100,100,211]
@@ -150,8 +197,12 @@ if __name__ == '__main__':
         y = [200,200,100]
         dx = [0,0,0]
         dy = [3,0,0]
- 
- 
+    if flag == 81: # OX 0 OY -1 T 0 SX 0 SY 30 Orth 0
+        x = [-200,-100,-100]
+        y = [200,200,100]
+        dx = [3,0,0]
+        dy = [0,0,0]
+
     if flag == 9: # OX 0 OY -0.75 T 4.615 SX 0 SY 8.654 Orth 4.615
         x = [-300,-300,-100,-100]
         y = [300,100,100,400]
@@ -205,8 +256,9 @@ if __name__ == '__main__':
        
     print(flag)
     a = calmode(x,y,dx,dy)
+    #b = a 
     b = a.shiftadj()
-    b.thetaadj()
-    b.scaleadj()
+    b.thetaadj_new()
+    b.scaleadj_new()
     #a.ol_map()
     b.ol_map()
