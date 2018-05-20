@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import re
 class mapata(object):
     def __init__(self,file_path):
@@ -85,5 +84,3 @@ class mapata(object):
 if __name__ == '__main__':
     a = mapata(r'C:\Users\Administrator\Desktop\hkj\275_site_correction_map1')
     #a = oldata(r'C:\Users\Administrator\Desktop\hkj\新建文件夹\OL20180429175018.csv')
-
-        

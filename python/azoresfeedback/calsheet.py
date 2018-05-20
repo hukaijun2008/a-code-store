@@ -12,6 +12,7 @@ class calmode(object):
         self.dy_L = dy_l
         self.region_L = []
         self.center = []
+        self.adj_result = {}
         self.OffsetX = 0
         self.OffsetY = 0
         self.Theta = 0
@@ -39,11 +40,13 @@ class calmode(object):
                 wy = mapdata.regin_info[region_id]['RH']
                 if self.x_L[i] > cx - wx/2 and self.x_L[i] < cx + wx/2:
                     if self.y_L[i] > cy - wy/2 and self.y_L[i] < cy + wy/2:
-                        self.region_L[i] = int(region_id)
+                        self.region_L[i] = region_id
                         break
-
-    def ol_map(self):
-        color_map = {0:'b',1:'g',2:'r',3:'c',4:'m',5:'y',6:'k',7:'w'}
+        for region_id in mapdata.regin_info:
+            self.adj_result[region_id] = {}
+        print(self.adj_result)
+    def ol_map(self,FlieName):
+        color_map = {'0':'b','1':'g','2':'r','3':'c','4':'m','5':'y','6':'k','7':'w'}
         plt.figure("OL mapping图")
         x = self.x_L
         y = self.y_L
@@ -57,7 +60,9 @@ class calmode(object):
                 plt.arrow(x[i],y[i],dx[i]*50,dy[i]*50,width = 1.5,length_includes_head = True,head_width = 8,color = color_map[self.region_L[i]])
         plt.xlim(-460*1.5,460*1.5)
         plt.ylim(-365*1.5,365*1.5)
-        plt.show()  
+        plt.savefig( FlieName + ".jpg")  
+        plt.close('all')
+        #plt.show()  
  
     def shiftadj(self):
         con_aft = copy.deepcopy(self)
@@ -67,7 +72,7 @@ class calmode(object):
                 region_dic[con_aft.region_L[i]].append(i)
             else:
                 region_dic[con_aft.region_L[i]] = [i]
-
+        print(region_dic)
         for key_region in region_dic:
             dx_total = 0
             dy_total = 0
@@ -84,7 +89,9 @@ class calmode(object):
             center_x = x_total/len(region_dic[key_region])
             center_y = y_total/len(region_dic[key_region])
             con_aft.center[key_region] = [center_x,center_y]
-
+            con_aft.adj_result[key_region]['OffsetX'] = shift_dx
+            con_aft.adj_result[key_region]['OffsetY'] = shift_dy
+            con_aft.adj_result[key_region]['center'] = [center_x,center_y]
 
             for i in region_dic[key_region]:
                 con_aft.dx_L[i] = con_aft.dx_L[i] - shift_dx
@@ -192,7 +199,13 @@ class calmode(object):
             ans_L = np.linalg.solve(a,b)
             con_aft.Scalx = ans_L[0]
             con_aft.Orth = ans_L[1] + con_aft.Theta
-        
+            
+            con_aft.adj_result[key_region]['Theta'] = con_aft.Theta*1000
+            con_aft.adj_result[key_region]['Scalx'] = con_aft.Scalx*1000
+            con_aft.adj_result[key_region]['Scaly'] = con_aft.Scaly*1000
+            con_aft.adj_result[key_region]['Orth'] = con_aft.Orth*1000
+            
+            
             print("Theta:"+ str(con_aft.Theta*1000))
             print("Scalx:"+ str(con_aft.Scalx*1000))
             print("Scaly:"+ str(con_aft.Scaly*1000))
@@ -311,17 +324,17 @@ if __name__ == '__main__':
     if flag == 99:
         #mapobj = mapdata.mapata(r'C:\Users\Administrator\Desktop\hkj\275_site_correction_map1')
         #olobj = oldata.oldata(r'C:\Users\Administrator\Desktop\hkj\1.csv')
-        mapobj = mapdata.mapata(r'C:\Users\Administrator\Desktop\hkj\新建文件夹\189_site_correction_map - m')
-        olobj = oldata.oldata(r'C:\Users\Administrator\Desktop\hkj\新建文件夹\OL20180429175736.csv')
+        mapobj = mapdata.mapata(r'M:\调查中事项\OL\hkj\663_site_correction_map')
+        olobj = oldata.oldata(r'M:\调查中事项\OL\hkj\OL20180502160842.csv')
 
-    print(flag)
     a = calmode(olobj.oldata_x,olobj.oldata_y,olobj.oldata_dx,olobj.oldata_dy)
     a.regionjudge(mapobj)
-    a.ol_map()
+    a.ol_map('1')
     b = a.shiftadj()
-    b.ol_map()
+    #b.ol_map()
     c = b.mincal()
-    c.ol_map()
+    #c.ol_map()
+    print(c.adj_result)
 
     #a = calmode(x,y,dx,dy)
     #b = a 

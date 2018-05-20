@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 class oldata(object):
     def __init__(self,file_path):
         self.reci_num = ''
@@ -36,4 +35,3 @@ if __name__ == '__main__':
     a = oldata(r'C:\Users\Administrator\Desktop\hkj\1.csv')
     #a = oldata(r'C:\Users\Administrator\Desktop\hkj\新建文件夹\OL20180429175018.csv')
    
-        
