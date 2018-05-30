@@ -26,7 +26,7 @@ def ftpcopy(machine):
         
         file = 'ADC.log'
 
-        file_local = r'\\172.22.100.52\武汉天马\面板厂\阵列部\PHOTO\全公司可读\12.胡凯军\计测值' + '\\' + machine + '.log'
+        file_local = r'\\172.22.100.52\** + '\\' + machine + '.log'
 
         fp = open(file_local, 'wb')
         flag = '2'
