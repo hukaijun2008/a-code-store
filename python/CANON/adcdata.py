@@ -8,7 +8,7 @@ import shutil
 class adcdata(object):
     def __init__(self,machine,orspec,desspec):
 
-        file_ex = r'\\172.22.100.52\武汉天马\面板厂\阵列部\PHOTO\全公司可读\12.胡凯军\计测值' + '\\' + machine + '.log'
+        file_ex = r'\\172.22.100.52\**\计测值' + '\\' + machine + '.log'
         #file_local = r'M:\software\testcode\CANON\A1PHT300.log'
         file_local = '.\\data\\' + machine + '.log'
         self.machine_name = machine
@@ -141,7 +141,7 @@ class adcdata(object):
         timeStruct = time.strptime(self.endtime,'%Y/%m/%d %H:%M:%S')
         strend = time.strftime('%Y%m%d%H%M%S',timeStruct)
         
-        file_path = 'T:\\武汉天马\\面板厂\\阵列部\\PHOTO\\全公司可读\\00-计测值\\'
+        file_path = 'T:\\**\\'
         file_path = file_path + self.machine_name + '\\' + strbeg + '.xlsx'
         if ~os.path.exists(file_path):
             writer = pd.ExcelWriter(file_path)
