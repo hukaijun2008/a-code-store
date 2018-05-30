@@ -100,12 +100,12 @@ class steppermatch(QWidget):
             self.cal_list.setItem(row_num, 0, QStandardItem(region_id))
             #self.cal_list.setItem(row_num, 1, QStandardItem(str(c.adj_result[region_id]['center'][0])))
             #self.cal_list.setItem(row_num, 2, QStandardItem(str(c.adj_result[region_id]['center'][1])))
-            self.cal_list.setItem(row_num, 3, QStandardItem(str(c.adj_result[region_id]['OffsetX'])))
-            self.cal_list.setItem(row_num, 4, QStandardItem(str(c.adj_result[region_id]['OffsetY'])))
-            self.cal_list.setItem(row_num, 5, QStandardItem(str(c.adj_result[region_id]['Theta'])))
-            self.cal_list.setItem(row_num, 6, QStandardItem(str(c.adj_result[region_id]['Scalx'])))
-            self.cal_list.setItem(row_num, 7, QStandardItem(str(c.adj_result[region_id]['Scaly'])))
-            self.cal_list.setItem(row_num, 8, QStandardItem(str(c.adj_result[region_id]['Orth'])))
+            self.cal_list.setItem(row_num, 1, QStandardItem(str(c.adj_result[region_id]['OffsetX'])))
+            self.cal_list.setItem(row_num, 2, QStandardItem(str(c.adj_result[region_id]['OffsetY'])))
+            self.cal_list.setItem(row_num, 3, QStandardItem(str(c.adj_result[region_id]['Theta'])))
+            self.cal_list.setItem(row_num, 4, QStandardItem(str(c.adj_result[region_id]['Scalx'])))
+            self.cal_list.setItem(row_num, 5, QStandardItem(str(c.adj_result[region_id]['Scaly'])))
+            self.cal_list.setItem(row_num, 6, QStandardItem(str(c.adj_result[region_id]['Orth'])))
             
             
             row_num = row_num + 1
