@@ -5,7 +5,7 @@ import time
 def f161to31():
     
     path161 = r'\\172.27.110.161\micresult' + '\\'
-    target = r'\\172.22.100.52\武汉天马\面板厂\阵列部\PHOTO\全公司可读\00-CDC Data\CDC100'
+    target = r'\\172.22.100.52\***\CDC100'
     timeStruct1 = time.localtime(time.time())
     timeStruct2 = time.localtime(time.time()-24*60*60)
 
@@ -39,7 +39,7 @@ def f161to31pic():
     
     path161 = r'\\172.27.110.161\image_auto_save' + '\\'
     #path161 = r'M:\调查中事项' + '\\'
-    target = r'\\172.22.100.52\武汉天马\面板厂\阵列部\PHOTO\全公司可读\00-CDC Data\CDC100image'
+    target = r'\\172.22.100.52\**\CDC100image'
 
 
 
@@ -76,7 +76,7 @@ def f162to31pic():
     
     path161 = r'\\172.27.110.162\image_auto_save' + '\\'
     #path161 = r'M:\调查中事项' + '\\'
-    target = r'\\172.22.100.52\武汉天马\面板厂\阵列部\PHOTO\全公司可读\00-CDC Data\CDC200image'
+    target = r'\\172.22.100.52\**\CDC200image'
 
 
 
@@ -111,7 +111,7 @@ def f162to31pic():
     
 def f162to31():
     path162 = r'\\172.27.110.162\micresult' + '\\'
-    target = r'\\172.22.100.52\武汉天马\面板厂\阵列部\PHOTO\全公司可读\00-CDC Data\CDC200'
+    target = r'\\172.22.100.52\**\CDC200'
     timeStruct1 = time.localtime(time.time())
     timeStruct2 = time.localtime(time.time()-24*60*60)
 
